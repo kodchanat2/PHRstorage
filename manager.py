@@ -8,7 +8,7 @@ HBASE_PORT = 9000
 
 def save_batch(table, rowkey, batch_data):
 	c = starbase.Connection(port=HBASE_PORT)
-    res = client.request_enforcement('admin', 'path/path', 'GET', '1840400078741_555')
+    print client.request_enforcement('admin', 'path/path', 'GET', '1840400078741_555')
 	# print client.request_enforcement(rowkey[:rowkey.find('_')], 'save_batch', 'POST', rowkey)
 	# c = starbase.Connection(host=HBASE_HOST, port=HBASE_PORT)
 	table = c.table(table)

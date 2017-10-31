@@ -41,7 +41,7 @@ def fetch_all(table):
 
 def fetch_from(table, start_row, *args):
 	c = starbase.Connection(port=HBASE_PORT)
-	print client.request_enforcement(rowkey[:rowkey.find('_')], req_path_info, req_method, req_service)
+	# # print client.request_enforcement(rowkey[:rowkey.find('_')], req_path_info, req_method, req_service)
 	# c = starbase.Connection(host=HBASE_HOST, port=HBASE_PORT)
 	print "fetch_from > start_row: " , start_row
 	table = c.table(table)
@@ -52,7 +52,7 @@ def fetch_from(table, start_row, *args):
 
 def fetch_part(table, start_row, end_row, *args):
 	c = starbase.Connection(port=HBASE_PORT)
-	print client.request_enforcement(rowkey[:rowkey.find('_')], req_path_info, req_method, req_service)
+	# # print client.request_enforcement(rowkey[:rowkey.find('_')], req_path_info, req_method, req_service)
 	# c = starbase.Connection(host=HBASE_HOST, port=HBASE_PORT)
 	table = c.table(table)
 	if not args:

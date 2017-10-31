@@ -41,5 +41,5 @@ if __name__ == "__main__":
     req_method = 'GET'
     req_service = 'nova'
 
-    res = request_enforcement(user_name.encode(), req_path_info.encode(), req_method, req_service)
-    print res
+    # res = request_enforcement(user_name.encode(), req_path_info.encode(), req_method, req_service)
+    # print res

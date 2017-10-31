@@ -16,10 +16,10 @@ import json
 import urllib2
 
 
-def request_enforcement(tenant, sub, obj, act, service):
+def request_enforcement(sub, obj, act, service):
     url = 'http://localhost:9999/decision'
 
-    values = {"Tenant": tenant, "Sub": sub, "Obj": obj, "Act": act, "Service": service}
+    values = {"Tenant": '1', "Sub": sub, "Obj": obj, "Act": act, "Service": service}
     params = str(values)
     params = params.replace("'", '"')
 
@@ -41,5 +41,5 @@ if __name__ == "__main__":
     req_method = 'GET'
     req_service = 'nova'
 
-    res = request_enforcement('1'.encode(), user_name.encode(), req_path_info.encode(), req_method, req_service)
-    #print res
+    res = request_enforcement(user_name.encode(), req_path_info.encode(), req_method, req_service)
+    print res

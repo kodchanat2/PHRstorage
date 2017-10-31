@@ -19,7 +19,7 @@ import urllib2
 def request_enforcement(sub, obj, act, service):
     url = 'http://localhost:9999/decision'
 
-    values = {"Tenant": u'1', "Sub": unicode(sub), "Obj": unicode(obj), "Act": unicode(act), "Service": unicode(service)}
+    values = {"Tenant": '1', "Sub": sub, "Obj": obj, "Act": act, "Service": service}
     params = str(values)
     params = params.replace("'", '"')
 
@@ -41,5 +41,5 @@ if __name__ == "__main__":
     req_method = 'GET'
     req_service = 'nova'
 
-    res = request_enforcement('admin', 'path/path', 'GET', 'nova')
-    # print res
+    res = request_enforcement(user_name.encode(), req_path_info.encode(), req_method, req_service)
+    print res

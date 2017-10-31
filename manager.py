@@ -19,7 +19,8 @@ def save_batch(table, rowkey, batch_data):
 
 def fetch(table, rowkey, *args):
 	c = starbase.Connection(port=HBASE_PORT)
-	print client.request_enforcement(rowkey[:rowkey.find('_')], 'fetch', 'GET', rowkey)
+	client.request_enforcement(user_name.encode(), req_path_info.encode(), req_method, req_service)
+	# print client.request_enforcement(rowkey[:rowkey.find('_')], 'fetch', 'GET', rowkey)
 	# c = starbase.Connection(host=HBASE_HOST, port=HBASE_PORT)
 	table = c.table(table)
 	if not args:

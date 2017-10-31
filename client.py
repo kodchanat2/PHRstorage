@@ -19,7 +19,7 @@ import urllib2
 def request_enforcement(sub, obj, act, service):
     url = 'http://localhost:9999/decision'
 
-    values = {"Tenant": '1', "Sub": sub, "Obj": obj, "Act": act, "Service": service}
+    values = {"Tenant": u'1', "Sub": unicode(sub), "Obj": unicode(obj), "Act": unicode(act), "Service": unicode(service)}
     params = str(values)
     params = params.replace("'", '"')
 

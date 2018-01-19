@@ -20,7 +20,8 @@ def request_enforcement(sub, obj, act, service):
     url = 'http://localhost:9999/decision'
 
     values = {
-        "Tenant": '1', "Sub": unicode(sub).encode(), 
+        "Tenant": '1', 
+        "Sub": unicode(sub).encode(), 
         "Obj": unicode(obj).encode(), 
         "Act": act, 
         "Service":  unicode(service).encode()

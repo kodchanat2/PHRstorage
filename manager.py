@@ -33,7 +33,7 @@ def fetch(table, rowkey, *args):
 	print client.request_enforcement(rowkey[:rowkey.find('_')], 'fetch', 'GET', rowkey)
 	return result
 	
-
+# NOT USED
 def fetch_all(table):
 	c = starbase.Connection(port=HBASE_PORT)
 	# c = starbase.Connection(host=HBASE_HOST, port=HBASE_PORT)

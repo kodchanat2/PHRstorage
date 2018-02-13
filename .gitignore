@@ -12,4 +12,6 @@
 .Python
 
 #casbin
-casbin-server/casbin-server.*
+casbin-server/casbin-server
+casbin-server/casbin-server.exe
+casbin-server/*.log

@@ -26,11 +26,19 @@ import (
 )
 
 type SecurityContext struct {
-	Tenant string
-	Sub string
-	Obj string
-	Act string
-	Service string
+	UserID string
+	Role   string
+	// Platform	string
+	// Expertise	string
+	// Work_period	string
+	// Status_sub	string
+	OwnerID string
+	// AppID	string
+	// SensorID	string
+	// Status_res	string
+	// Date	string
+	// Location string
+	Action string
 }
 
 var logger *log.Logger
@@ -60,14 +68,14 @@ func handleRequest(c *gin.Context) {
 }
 
 func main() {
-	logfile,err:=os.OpenFile("decision.log", os.O_RDWR | os.O_CREATE | os.O_APPEND, 0666)
+	logfile, err := os.OpenFile("decision.log", os.O_RDWR|os.O_CREATE|os.O_APPEND, 0666)
 	if err != nil {
 		fmt.Printf("%s\n", err.Error())
 		os.Exit(-1)
 	}
 	defer logfile.Close()
 
-	logger = log.New(logfile, "", log.Ldate | log.Ltime)
+	logger = log.New(logfile, "", log.Ldate|log.Ltime)
 	logger.Print("Start logging..")
 
 	r := gin.Default()

@@ -15,8 +15,31 @@
 import json
 import urllib2
 
+def request_enforcement(uid, role, oid, action):
+    url = 'http://localhost:9111/decision'
+    # userID, Role, Platform, Expertise, work_period, status, ownerID, appID, sensorID, status, Date, Location
+    
+    values = {
+        "UserID": unicode(uid).encode(), 
+        "Role": unicode(role).encode(), 
+        "OwnerID": unicode(oid).encode(), 
+        "Action": action
+    }
+    params = str(values)
+    params = params.replace("'", '"')
 
-def request_enforcement(sub, obj, act, service):
+    headers = {"Content-type": "application/json", "Accept": "application/json"}
+
+    req = urllib2.Request(url, params, headers)
+    response = urllib2.urlopen(req)
+    res = json.loads(response.read())
+    if res['decision'] == 'true':
+        return True
+    else:
+        return False
+
+
+def old_request_enforcement(sub, obj, act, service):
     url = 'http://localhost:9111/decision'
 
     values = {
@@ -40,12 +63,12 @@ def request_enforcement(sub, obj, act, service):
         return False
 
 
-if __name__ == "__main__":
-    project_id = u'ce9ff56f5af746de93ec30f387cd7fa8'
-    user_name = 'admin'
-    req_path_info = '/ce9ff56f5af746de93ec30f387cd7fa8/servers/detail'
-    req_method = 'GET'
-    req_service = 'nova'
+# if __name__ == "__main__":
+#     project_id = u'ce9ff56f5af746de93ec30f387cd7fa8'
+#     user_name = 'admin'
+#     req_path_info = '/ce9ff56f5af746de93ec30f387cd7fa8/servers/detail'
+#     req_method = 'GET'
+#     req_service = 'nova'
 
     # res = request_enforcement(user_name, req_path_info, req_method, req_service)
     # print res

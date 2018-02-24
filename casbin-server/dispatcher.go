@@ -16,20 +16,15 @@ package main
 
 import (
 	"os"
-	"runtime"
 
 	"github.com/casbin/casbin"
 )
 
 var base_dir string
 
-var model_global_enable string = "model/enable_model.conf"
-var model_global_restrict string = "model/restrict_model.conf"
 var model_custom string = "model/custom_model.conf"
 
-var policy_global_enable string
-var policy_global_restrict string
-var policy_tenant1_custom string
+var policy_custom string
 
 func pathExists(path string) (bool, error) {
 	_, err := os.Stat(path)
@@ -43,72 +38,21 @@ func pathExists(path string) (bool, error) {
 }
 
 func init() {
-	exists, _ := pathExists(model_global_enable)
-	if !exists {
-		model_global_enable = "/home/luoyang/gopath/src/github.com/casbin/casbin-server/model/enable_model.conf"
-		model_global_restrict = "/home/luoyang/gopath/src/github.com/casbin/casbin-server/model/restrict_model.conf"
-		model_custom = "/home/luoyang/gopath/src/github.com/casbin/casbin-server/model/custom_model.conf"
-	}
-
-	if runtime.GOOS == "windows" {
-		base_dir = "J:/github_repos/patron_rest/etc/patron/custom_policy/"
-	} else {
-		if os.Getenv("TRAVIS") == "true" {
-			base_dir = "../patron_rest/etc/patron/custom_policy/"
-		} else {
-			base_dir = "/home/luoyang/patron_rest/etc/patron/custom_policy/"
-		}
-	}
-
-	policy_global_enable = base_dir + "../enable.csv"
-	policy_global_restrict = base_dir + "../restrict.csv"
-	policy_tenant1_custom = base_dir + "tenant1/custom-policy.csv"
+	policy_custom = "policy/custom-policy.csv"
 }
 
 func enforceForFile(modelPath string, policyPath string, sc SecurityContext) bool {
 	e := casbin.NewEnforcer(modelPath, policyPath)
-	return e.Enforce(sc.Tenant, sc.Sub, sc.Obj, sc.Act, sc.Service)
+	return e.Enforce(sc.UserID, sc.OwnerID, sc.Role, sc.Action)
 }
 
 func enforce(sc SecurityContext) bool {
-	if sc.Tenant == "admin" {
+	if sc.UserID == sc.OwnerID {
 		return true
 	}
 
-	if sc.Tenant == "1" || sc.Tenant == "2" || sc.Tenant == "4" || sc.Tenant == "9" {
-		return true
-	}
-
-	if sc.Tenant == "rds" || sc.Tenant == "service" || sc.Tenant == "services" {
-		return true
-	}
-
-	if sc.Tenant == "tenant1" {
-		if !enforceForFile(model_global_restrict, policy_global_restrict, sc) {
-			return false
-		}
-
-		if enforceForFile(model_global_enable, policy_global_enable, sc) {
-			return true
-		}
-
-		return enforceForFile(model_custom, policy_tenant1_custom, sc)
-	}
-
-	if sc.Tenant == "tenant2" {
-		if !enforceForFile(model_global_restrict, policy_global_restrict, sc) {
-			return false
-		}
-
-		if enforceForFile(model_global_enable, policy_global_enable, sc) {
-			return true
-		}
-
-		return true
-	}
-
-	if sc.Tenant == "tenant3" {
-		return false
+	if sc.Role == "Docter" {
+		return enforceForFile(model_custom, policy_custom, sc)
 	}
 
 	return false

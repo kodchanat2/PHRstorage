@@ -11,6 +11,7 @@ import base64
 import manager 
 import service
 import mock 
+import client
 
 app = Flask(__name__)
 # app.config["JSON_SORT_KEYS"] = False
@@ -386,6 +387,8 @@ def profile():
 		
 		data = manager.fetch(table_information, rowkey, column)
 
+		print client.request_enforcement(userid, "patient", userid, "read_profile")
+		
 		return jsonify(data=data)
 
 #######

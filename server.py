@@ -292,6 +292,7 @@ def resultdata():
 def water():
 	maxDateAmount = 7
 	userid = request.args.get("userid")
+	watcherid = request.args.get("watcherid")
 	appid =  request.args.get("appid")	
 	string_date = request.args.get("date")
 
@@ -313,8 +314,10 @@ def water():
 
 	chart = service.generate_info_exercise_barchart(data)
 
-	return jsonify(data=data, chart=chart)
-
+	if client.request_enforcement(watcherid, "patient", userid, "read_water") :
+		return jsonify(data=data, chart=chart)
+	else :
+		return jsonify(data={})
 #######
 ####### Information 
 #######

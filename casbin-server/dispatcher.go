@@ -52,8 +52,8 @@ func enforce(sc SecurityContext) bool {
 	}
 
 	if sc.Role == "Docter" {
-		return enforceForFile(model_custom, policy_custom, sc)
+		return true
 	}
 
-	return false
+	return enforceForFile(model_custom, policy_custom, sc)
 }

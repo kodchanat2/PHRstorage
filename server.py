@@ -382,15 +382,16 @@ def profile():
 		userid = request.args.get("userid")
 		appid =  request.args.get("appid")
 		watcherid = request.args.get("watcherid")
-
+		
 		rowkey = userid + "_" + appid
 		column = 'profile'
 		
 		data = manager.fetch(table_information, rowkey, column)
 
-		print client.request_enforcement(watcherid, "patient", userid, "read_profile")
-		
-		return jsonify(data=data)
+		if client.request_enforcement(watcherid, "patient", userid, "read_profile") :
+			return jsonify(data=data)
+		else :
+			return jsonify(data={})
 
 #######
 ####### Exercise

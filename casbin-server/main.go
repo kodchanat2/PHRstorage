@@ -23,6 +23,7 @@ import (
 	"strconv"
 
 	"github.com/gin-gonic/gin"
+	"github.com/fatih/color"
 )
 
 type SecurityContext struct {
@@ -58,7 +59,12 @@ func handleRequest(c *gin.Context) {
 	}
 
 	res := enforce(sc)
-	fmt.Println("Request: ", sc, " ---> ", res)
+	fmt.Print("Request: ", sc, " ---> ")
+	if res == true {
+		color.HiGreen("Allow")
+	} else {
+		color.HiRed("Deny")
+	}
 	logger.Print("Request: ", sc, " ---> ", res)
 
 	res_str := strconv.FormatBool(res)
@@ -81,4 +87,5 @@ func main() {
 	r := gin.Default()
 	r.POST("/decision", handleRequest)
 	r.Run(":9111") // listen and serve on 0.0.0.0:8080
+
 }

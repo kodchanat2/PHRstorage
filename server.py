@@ -48,7 +48,7 @@ def nutrientdata():
 		data = {}
 		data['nutrient'] = nutrients
 
-		if !client.request_enforcement(watcherid, "patient", userid, "write_nutrient") :
+		if not client.request_enforcement(watcherid, "patient", userid, "write_nutrient") :
 			return jsonify(success="false")
 		manager.save_batch(table_nutrient, rowkey, data)
 
@@ -297,7 +297,7 @@ def resultdata():
 
 		# print json.dumps(obj, indent=4, separators=(',', ': '))
 		
-		if !client.request_enforcement(watcherid, "patient", userid, "write_result") :
+		if not client.request_enforcement(watcherid, "patient", userid, "write_result") :
 			return jsonify(success="false")
 		manager.insert_data(table_result, rowkey, 'testresults', title, _value)
 		
@@ -363,7 +363,7 @@ def appointment():
 		description = json.dumps(obj.get("description"),ensure_ascii=False)
 		
 		rowkey = userid + "_" + appid + "_" + date
-		if !client.request_enforcement(watcherid, "patient", userid, "write_appointment") :
+		if not client.request_enforcement(watcherid, "patient", userid, "write_appointment") :
 			return jsonify(success="false")
 		manager.insert_data(table_information, rowkey, 'treatment', 'appointment', description)
 
@@ -413,7 +413,7 @@ def profile():
 		
 		rowkey = userid + "_" + appid
 		
-		if !client.request_enforcement(watcherid, "patient", userid, "write_profile") :
+		if not client.request_enforcement(watcherid, "patient", userid, "write_profile") :
 			return jsonify(success="false")
 		manager.save_batch(table_information, rowkey, data)
 
@@ -469,7 +469,7 @@ def exercise():
 		_value = str(value) + ',' + str(goal)
 
 		
-		if !client.request_enforcement(watcherid, "patient", userid, "write_exercise") :
+		if not client.request_enforcement(watcherid, "patient", userid, "write_exercise") :
 			return jsonify(success="false")
 		manager.insert_data(table_exercise, rowkey, columnFamily, title, _value)
 
@@ -549,7 +549,7 @@ def medicine():
 		data['medicine']['side_effect'] = side_effect
 
 
-		if !client.request_enforcement(watcherid, "patient", userid, "write_medicine") :
+		if not client.request_enforcement(watcherid, "patient", userid, "write_medicine") :
 			return jsonify(success="false")
 		manager.save_batch(table_medicines, rowkey, data)
 
@@ -588,7 +588,7 @@ def medicine():
 
 		rowkey = userid + "_" + appid + "_" + med_id
 
-		if !client.request_enforcement(watcherid, "patient", userid, "delete_medicine") :
+		if not client.request_enforcement(watcherid, "patient", userid, "delete_medicine") :
 			return jsonify(success="false")
 		manager.delete_row(table_medicines, rowkey)
 		

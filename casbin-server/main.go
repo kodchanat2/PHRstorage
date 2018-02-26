@@ -22,8 +22,8 @@ import (
 	"os"
 	"strconv"
 
-	"github.com/gin-gonic/gin"
 	"github.com/fatih/color"
+	"github.com/gin-gonic/gin"
 )
 
 type SecurityContext struct {
@@ -59,7 +59,7 @@ func handleRequest(c *gin.Context) {
 	}
 
 	res := enforce(sc)
-	fmt.Print("Request: ", sc, " ---> ")
+	fmt.Print("From:", sc.UserID, " To:", sc.OwnerID, " <", sc.UserID, "> ---> ")
 	if res == true {
 		color.HiGreen("Allow")
 	} else {

@@ -55,6 +55,7 @@ def nutrientdata():
 
 	if request.method == 'GET':
 		userid = request.args.get("userid")
+		watcherid = request.args.get("watcherid")
 		appid =  request.args.get("appid")
 		date = request.args.get("date")
 		meal = request.args.get("meal")
@@ -64,7 +65,10 @@ def nutrientdata():
 		data = manager.fetch(table_nutrient, rowkey)
 
 		# print data
-    	return jsonify(data=data)
+		if client.request_enforcement(watcherid, "patient", userid, "read_nutrient") :
+			return jsonify(data=data)
+		else :
+			return jsonify(data={})
 
 	return jsonify(success="true")
 

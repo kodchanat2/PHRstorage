@@ -37,6 +37,7 @@ def nutrientdata():
 		obj = request.json
 		print json.dumps(obj, indent=4, separators=(',', ': '))
 		userid = obj.get("userid")
+		watcherid = obj.get("watcherid")
 		appid = obj.get("appid")
 		nutrients = obj.get("nutrients")
 		date = obj.get("date")
@@ -47,6 +48,8 @@ def nutrientdata():
 		data = {}
 		data['nutrient'] = nutrients
 
+		if !client.request_enforcement(watcherid, "patient", userid, "write_nutrient") :
+			return jsonify(success="false")
 		manager.save_batch(table_nutrient, rowkey, data)
 
 		# print json.dumps(obj, indent=4, separators=(',', ': '))
@@ -76,6 +79,7 @@ def nutrientdata():
 def nutrientImage():
 	maxDateAmount = 7
 	userid = ''
+	watcherid = ''
 	appid = ''
 	string_date = ''
 	title = ''
@@ -84,13 +88,14 @@ def nutrientImage():
 
 	if request.method == 'GET':
 		userid = request.args.get("userid")
+		watcherid = request.args.get("watcherid")
 		appid =  request.args.get("appid")
 		string_date = request.args.get("date")
 		title = request.args.get("title")
 		amount = int(request.args.get("amount")) if request.args.get("amount") else 0
 		amount = (amount if amount < maxDateAmount and amount > 0 else maxDateAmount) + 1
 
-
+	# not used
 	elif request.method == 'POST':
 		obj = request.json
 		
@@ -138,7 +143,11 @@ def nutrientImage():
 	with open(img_path, "rb") as image_file:
 		encoded_string = base64.b64encode(image_file.read())
 
-	return jsonify(image=encoded_string)
+	
+	if client.request_enforcement(watcherid, "patient", userid, "read_nutrient_chart") :
+		return jsonify(image=encoded_string)
+	else :
+		return jsonify(success="true")
 	# return send_file(img_path, mimetype='image/png')
 		# return "ok"
 
@@ -148,6 +157,7 @@ def nutrientImage():
 @app.route('/nutrient/chart/progress', methods=['GET'])
 def nutrientProgress():
 	userid = request.args.get("userid")
+	watcherid = request.args.get("watcherid")
 	appid = request.args.get("appid")
 	# end = dt.datetime.now()
 	string_date = request.args.get("date")
@@ -170,13 +180,17 @@ def nutrientProgress():
 		limit = service.get_nutrients_minmax(mock.get_nutrient_limit())
 		# print limit
 		
-		return jsonify(data=data, limit=limit)
+		if client.request_enforcement(watcherid, "patient", userid, "read_nutrient") :
+			return jsonify(data=data, limit=limit)
+		else :
+			return jsonify(data={})
 
 @app.route('/nutrient/chart/points', methods=['GET'])
 def chartnutrient():
 	maxDateAmount = 7
 	if request.method == 'GET':
 		userid = request.args.get("userid")
+		watcherid = request.args.get("watcherid")
 		appid =  request.args.get("appid")
 		string_date = request.args.get("date")
 		title = request.args.get("title")
@@ -208,7 +222,10 @@ def chartnutrient():
 		dic = service.summary_by_date(result, columnFamily, title)
 		data_chart = service.generate_info_nutrient_linechart(dic, minValue, maxValue, begin, amount)
 
-		return jsonify(chart=data_chart) 
+		if client.request_enforcement(watcherid, "patient", userid, "read_nutrient_chart") :
+			return jsonify(chart=data_chart)
+		else :
+			return jsonify(data={})
 #######
 ####### Result 
 #######
@@ -216,6 +233,7 @@ def chartnutrient():
 def chartpoint():
 	if request.method == 'GET':
 		userid = request.args.get("userid")
+		watcherid =  request.args.get("watcherid")
 		appid =  request.args.get("appid")
 		year = request.args.get("year")
 		month = request.args.get("month")
@@ -252,7 +270,11 @@ def chartpoint():
 		# print (json.loads(obj)).get("view_type")
 		# return jsonify(points=points,dates=dates,lastcheck=lastcheck,limit=limit,unit=unit)
 		# return jsonify(success="true")
-		return jsonify(chart=info_linechart, data=result)
+		
+		if client.request_enforcement(watcherid, "patient", userid, "read_result_chart") :
+			return jsonify(chart=info_linechart, data=result)
+		else :
+			return jsonify(data={})
 
 @app.route('/result/info', methods=['GET', 'POST'])
 def resultdata():
@@ -260,6 +282,7 @@ def resultdata():
 		obj = request.json
 		
 		userid = obj.get("userid")
+		watcherid = obj.get("watcherid")
 		appid = obj.get("appid")
 		date = obj.get("date")
 		labresult = obj.get("result")
@@ -273,7 +296,9 @@ def resultdata():
 		_value = str(value) + ',' + str(limit)
 
 		# print json.dumps(obj, indent=4, separators=(',', ': '))
-
+		
+		if !client.request_enforcement(watcherid, "patient", userid, "write_result") :
+			return jsonify(success="false")
 		manager.insert_data(table_result, rowkey, 'testresults', title, _value)
 		
 		return jsonify(success="true")
@@ -331,13 +356,15 @@ def appointment():
 		obj = request.json
 
 		userid = obj.get("userid")
+		watcherid = obj.get("watcherid")
 		appid = obj.get("appid")
 		date = obj.get("date")
 
 		description = json.dumps(obj.get("description"),ensure_ascii=False)
 		
 		rowkey = userid + "_" + appid + "_" + date
-		
+		if !client.request_enforcement(watcherid, "patient", userid, "write_appointment") :
+			return jsonify(success="false")
 		manager.insert_data(table_information, rowkey, 'treatment', 'appointment', description)
 
 		# print json.dumps(obj, indent=4, separators=(',', ': '))
@@ -345,6 +372,7 @@ def appointment():
 
 	elif request.method == 'GET':
 		userid = request.args.get("userid")
+		watcherid = request.args.get("watcherid")
 		appid =  request.args.get("appid")
 		month = request.args.get("month")
 		year = request.args.get("year")
@@ -363,7 +391,10 @@ def appointment():
 		data_json = service.generate_key_value_appointment(data)
 		
 		
-		return jsonify(data=data_json)
+		if client.request_enforcement(watcherid, "patient", userid, "read_appointment") :
+			return jsonify(data=data_json)
+		else :
+			return jsonify(data={})
 
 @app.route('/profile/info', methods=['GET', 'POST'])
 def profile():
@@ -371,6 +402,7 @@ def profile():
 		obj = request.json
 
 		userid = obj.get("userid")
+		watcherid = obj.get("watcherid")
 		appid = obj.get("appid")
 		profile = obj.get("profile")
 
@@ -381,6 +413,8 @@ def profile():
 		
 		rowkey = userid + "_" + appid
 		
+		if !client.request_enforcement(watcherid, "patient", userid, "write_profile") :
+			return jsonify(success="false")
 		manager.save_batch(table_information, rowkey, data)
 
 		return jsonify(success="true")
@@ -413,6 +447,7 @@ def exercise():
 		# print request
 
 		userid = obj.get("userid")
+		watcherid = obj.get("watcherid")
 		appid = obj.get("appid")
 		date = obj.get("date")
 
@@ -433,6 +468,9 @@ def exercise():
 		rowkey = userid + "_" + appid + "_" + date + "_" + time
 		_value = str(value) + ',' + str(goal)
 
+		
+		if !client.request_enforcement(watcherid, "patient", userid, "write_exercise") :
+			return jsonify(success="false")
 		manager.insert_data(table_exercise, rowkey, columnFamily, title, _value)
 
 		# print json.dumps(obj, indent=4, separators=(',', ': '))
@@ -442,6 +480,7 @@ def exercise():
 	elif request.method == 'GET':
 		maxDateAmount = 7
 		userid = request.args.get("userid")
+		watcherid = request.args.get("watcherid")
 		appid =  request.args.get("appid")
 		title =  request.args.get("title")
 		string_date = request.args.get("date")
@@ -473,7 +512,10 @@ def exercise():
 
 		chart = service.generate_info_exercise_barchart(data)
 
-		return jsonify(chart=chart, data=data)
+		if client.request_enforcement(watcherid, "patient", userid, "read_exercise") :
+			return jsonify(chart=chart, data=data)
+		else :
+			return jsonify(data={})
 
 #######
 ####### Medicine
@@ -491,6 +533,7 @@ def medicine():
 		obj = request.json
 
 		userid = obj.get("userid")
+		watcherid = obj.get("watcherid")
 		appid = obj.get("appid")
 		medicine = obj.get("medicine")
 		med_id = obj.get("medId")
@@ -506,6 +549,8 @@ def medicine():
 		data['medicine']['side_effect'] = side_effect
 
 
+		if !client.request_enforcement(watcherid, "patient", userid, "write_medicine") :
+			return jsonify(success="false")
 		manager.save_batch(table_medicines, rowkey, data)
 
 		# print json.dumps(obj, indent=4, separators=(',', ': '))
@@ -513,6 +558,7 @@ def medicine():
 		return jsonify(success="true")
 	elif request.method == 'GET': #get all current use medicine
 		userid = request.args.get("userid")
+		watcherid = request.args.get("watcherid")
 		appid =  request.args.get("appid")
 
 		start_row = base64.b64encode("{}_{}".format(userid, appid))
@@ -529,15 +575,21 @@ def medicine():
 		
 		schedule = service.get_medicine_schedule(desc_list)
 
-		return jsonify(data=list(schedule.items()), desc=desc_value)
+		if client.request_enforcement(watcherid, "patient", userid, "read_medicine") :
+			return jsonify(data=list(schedule.items()), desc=desc_value)
+		else :
+			return jsonify(data={})
 
 	elif request.method == 'DELETE':
 		userid = request.args.get("userid")
+		watcherid = request.args.get("watcherid")
 		appid =  request.args.get("appid")
 		med_id = request.args.get('medId')
 
 		rowkey = userid + "_" + appid + "_" + med_id
 
+		if !client.request_enforcement(watcherid, "patient", userid, "delete_medicine") :
+			return jsonify(success="false")
 		manager.delete_row(table_medicines, rowkey)
 		
 		return jsonify(success="true")

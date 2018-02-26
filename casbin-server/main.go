@@ -59,7 +59,7 @@ func handleRequest(c *gin.Context) {
 	}
 
 	res := enforce(sc)
-	fmt.Print("From:", sc.UserID, " To:", sc.OwnerID, " <", sc.UserID, "> ---> ")
+	fmt.Print("From:", sc.UserID, " To:", sc.OwnerID, " <", sc.Action, "> ---> ")
 	if res == true {
 		color.HiGreen("Allow")
 	} else {

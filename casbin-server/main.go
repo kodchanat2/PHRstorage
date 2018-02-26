@@ -84,7 +84,7 @@ func main() {
 	logger = log.New(logfile, "", log.Ldate|log.Ltime)
 	logger.Print("Start logging..")
 
-	r := gin.Default()
+	r := gin.New()
 	r.POST("/decision", handleRequest)
 	r.Run(":9111") // listen and serve on 0.0.0.0:8080
 

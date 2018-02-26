@@ -42,7 +42,7 @@ func init() {
 }
 
 func enforceForFile(modelPath string, policyPath string, sc SecurityContext) bool {
-	e := casbin.NewEnforcer(modelPath, policyPath)
+	e := casbin.NewEnforcer(modelPath, policyPath, false)
 	return e.Enforce(sc.UserID, sc.Role, sc.OwnerID, sc.Action)
 }
 

@@ -21,7 +21,7 @@ def request_enforcement(uid, role, oid, action):
     
     values = {
         "UserID": unicode(uid).encode(), 
-        "Role": unicode(role).encode(), 
+        "Role": role, 
         "OwnerID": unicode(oid).encode(), 
         "Action": action
     }

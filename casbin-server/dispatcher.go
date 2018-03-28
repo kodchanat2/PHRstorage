@@ -46,7 +46,7 @@ func init() {
 }
 
 func enforceForFile(sc SecurityContext) bool {
-	e := casbin.NewEnforcer(modelPath, policyPath, false)
+	e := casbin.NewEnforcer(model_custom, policy_custom, false)
 	return e.Enforce(sc.UserID, sc.Role, sc.OwnerID, sc.Action)
 }
 func enforceForTimeFile(sc SecurityContext) bool {

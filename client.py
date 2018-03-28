@@ -24,7 +24,7 @@ def request_enforcement(uid, role, oid, action, time_req):
         "Role": role, 
         "OwnerID": unicode(oid).encode(), 
         "Action": action,
-        "Time": time_req
+        "Time": unicode(time_req).encode()
     }
     params = str(values)
     params = params.replace("'", '"')

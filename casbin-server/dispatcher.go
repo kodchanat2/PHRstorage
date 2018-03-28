@@ -16,6 +16,7 @@ package main
 
 import (
 	"os"
+	"time"
 
 	"github.com/casbin/casbin"
 )
@@ -23,8 +24,10 @@ import (
 var base_dir string
 
 var model_custom string = "model/custom_model.conf"
+var model_time string = "model/time_model.conf"
 
 var policy_custom string
+var policy_time string
 
 func pathExists(path string) (bool, error) {
 	_, err := os.Stat(path)
@@ -39,11 +42,17 @@ func pathExists(path string) (bool, error) {
 
 func init() {
 	policy_custom = "policy/custom-policy.csv"
+	policy_time = "policy/time-policy.csv"
 }
 
-func enforceForFile(modelPath string, policyPath string, sc SecurityContext) bool {
+func enforceForFile(sc SecurityContext) bool {
 	e := casbin.NewEnforcer(modelPath, policyPath, false)
 	return e.Enforce(sc.UserID, sc.Role, sc.OwnerID, sc.Action)
+}
+func enforceForTimeFile(sc SecurityContext) bool {
+	e := casbin.NewEnforcer(model_time, policy_time, false)
+	e.AddFunction("betweenTime", TimeFunc)
+	return e.Enforce(sc.UserID, sc.Role, sc.OwnerID, sc.Action, sc.Time)
 }
 
 func enforce(sc SecurityContext) bool {
@@ -51,9 +60,30 @@ func enforce(sc SecurityContext) bool {
 		return true
 	}
 
-	if sc.Role == "Docter" {
+	if sc.Action == "read_profile" {
 		return true
 	}
 
-	return enforceForFile(model_custom, policy_custom, sc)
+	if !enforceForFile(sc) {
+		return false
+	}
+
+	return enforceForTimeFile(sc)
+}
+
+// ------------- Custom Function -----------------
+func IsBetweenTime(time1 time.Time, time2 time.Time, target time.Time) bool {
+	return target.After(time1) && target.Before(time2)
+}
+
+func TimeFunc(args ...interface{}) (interface{}, error) {
+	key1 := args[0].(string)
+	key2 := args[1].(string)
+	key3 := args[2].(string)
+
+	t1, _ := time.Parse(time.RFC3339, key1)
+	t2, _ := time.Parse(time.RFC3339, key2)
+	t, _ := time.Parse(time.RFC3339, key3)
+
+	return (bool)(IsBetweenTime(t1, t2, t)), nil
 }

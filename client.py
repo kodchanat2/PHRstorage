@@ -15,7 +15,7 @@
 import json
 import urllib2
 
-def request_enforcement(uid, role, oid, action):
+def request_enforcement(uid, role, oid, action, time_req):
     url = 'http://localhost:9111/decision'
     # userID, Role, Platform, Expertise, work_period, status, ownerID, appID, sensorID, status, Date, Location
     
@@ -23,7 +23,8 @@ def request_enforcement(uid, role, oid, action):
         "UserID": unicode(uid).encode(), 
         "Role": role, 
         "OwnerID": unicode(oid).encode(), 
-        "Action": action
+        "Action": action,
+        "Time": time_req
     }
     params = str(values)
     params = params.replace("'", '"')

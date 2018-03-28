@@ -37,7 +37,7 @@ type SecurityContext struct {
 	// AppID	string
 	// SensorID	string
 	// Status_res	string
-	// Date	string
+	Time string
 	// Location string
 	Action string
 }

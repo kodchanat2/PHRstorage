@@ -1,0 +1,15 @@
+[request_definition]
+r = user, role, owner, act
+
+[policy_definition]
+p = user, role, owner, act
+
+[role_definition]
+g = _, _, _
+
+[policy_effect]
+e = some(where (p.eft == allow
+
+[matchers]
+m = r.user == p.user && r.owner == p.owner && (r.role == p.role || p.role == "*") && regexMatch(r.act, p.act)
+# && g(r.sub, p.sub) && keyMatch(r.obj, p.obj) && (r.act == p.act || p.act == "*")

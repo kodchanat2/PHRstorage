@@ -75,7 +75,7 @@ func enforce(sc SecurityContext) bool {
 }
 
 // ------------- Custom Function -----------------
-func IsBetweenTime(time1 int64, time2 int64, target int64) bool {
+func IsBetweenTime(time1 int64, time2 int64, time int64) bool {
 	return time1 <= time && time <= time2
 	// return target.After(time1) && target.Before(time2)
 }

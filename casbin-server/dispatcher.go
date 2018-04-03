@@ -16,7 +16,7 @@ package main
 
 import (
 	"os"
-	"time"
+	"strconv"
 
 	"github.com/casbin/casbin"
 )
@@ -75,8 +75,9 @@ func enforce(sc SecurityContext) bool {
 }
 
 // ------------- Custom Function -----------------
-func IsBetweenTime(time1 Time, time2 Time, target Time) bool {
-	return target.After(time1) && target.Before(time2)
+func IsBetweenTime(time1 int64, time2 int64, target int64) bool {
+	return time1 <= time && time <= time2
+	// return target.After(time1) && target.Before(time2)
 }
 
 func TimeFunc(args ...interface{}) (interface{}, error) {
@@ -84,9 +85,9 @@ func TimeFunc(args ...interface{}) (interface{}, error) {
 	key2 := args[1].(string)
 	key3 := args[2].(string)
 
-	t1, _ := time.Parse(time.RFC3339, key1)
-	t2, _ := time.Parse(time.RFC3339, key2)
-	t, _ := time.Parse(time.RFC3339, key3)
+	t1, _ := strconv.ParseInt(key1, 10, 64)
+	t2, _ := strconv.ParseInt(key2, 10, 64)
+	t, _ := strconv.ParseInt(key3, 10, 64)
 
 	return (bool)(IsBetweenTime(t1, t2, t)), nil
 }

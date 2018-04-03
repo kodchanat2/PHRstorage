@@ -80,7 +80,7 @@ func IsBetweenTime(time1 int64, time2 int64, time int64) bool {
 	// return target.After(time1) && target.Before(time2)
 }
 
-func TimeFunc(args ...interface{}) (interface{}, error) {
+func TimeFunc(args ...interface{}) (interface{}, error) bool {
 	key1 := args[0].(string)
 	key2 := args[1].(string)
 	key3 := args[2].(string)

@@ -50,7 +50,7 @@ func enforceForFile(sc SecurityContext) bool {
 	return e.Enforce(sc.UserID, sc.Role, sc.OwnerID, sc.Action)
 }
 func enforceForTimeFile(sc SecurityContext) bool {
-	e, _ := casbin.NewEnforcerSafe(model_time, policy_time, false)
+	e := casbin.NewEnforcer(model_time, policy_time, false)
 	e.AddFunction("betweenTime", TimeFunc)
 	return e.Enforce(sc.UserID, sc.Role, sc.OwnerID, sc.Action, sc.Time)
 }
@@ -80,7 +80,7 @@ func IsBetweenTime(time1 int64, time2 int64, time int64) bool {
 	// return target.After(time1) && target.Before(time2)
 }
 
-func TimeFunc(args ...interface{}) (interface{}, error) bool {
+func TimeFunc(args ...interface{}) (interface{}, error) {
 	key1 := args[0].(string)
 	key2 := args[1].(string)
 	key3 := args[2].(string)

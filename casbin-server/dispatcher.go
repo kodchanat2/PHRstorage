@@ -25,9 +25,11 @@ var base_dir string
 
 var model_custom string = "model/custom_model.conf"
 var model_time string = "model/time_model.conf"
+var model_DB string = "model/db_model.conf"
 
 var policy_custom string
 var policy_time string
+var policy_DB string
 
 func pathExists(path string) (bool, error) {
 	_, err := os.Stat(path)
@@ -43,6 +45,7 @@ func pathExists(path string) (bool, error) {
 func init() {
 	policy_custom = "policy/custom-policy.csv"
 	policy_time = "policy/time-policy.csv"
+	policy_DB = "policy/db-policy.csv"
 }
 
 func enforceForFile(sc SecurityContext) bool {
@@ -52,13 +55,21 @@ func enforceForFile(sc SecurityContext) bool {
 func enforceForTimeFile(sc SecurityContext) bool {
 	e := casbin.NewEnforcer(model_time, policy_time, false)
 	e.AddFunction("betweenTime", TimeFunc)
-	return e.Enforce(sc.UserID, sc.Role, sc.OwnerID, sc.Action, sc.Time)
+	return e.Enforce(sc.UserID, sc.Role, sc.OwnerID, sc.Action, sc.Duration)
+}
+
+func enforceForDB(sc SecurityContext) bool {
+	e := casbin.NewEnforcer(model_DB, policy_DB, false)
+	e.AddFunction("inDuration", DurFunc)
+	e.AddFunction("inDistance", DisFunc)
+	return e.Enforce(sc.UserID, sc.Action, sc.OwnerID, sc.Role, sc.Platform, sc.Work_period, sc.Status, sc.Duration, sc.Distance, sc.AppID)
 }
 
 func enforce(sc SecurityContext) bool {
 	if sc.UserID == sc.OwnerID {
 		return true
 	}
+	return enforceForDB(sc)
 
 	if sc.Action == "read_profile" {
 		return true
@@ -90,4 +101,24 @@ func TimeFunc(args ...interface{}) (interface{}, error) {
 	t, _ := strconv.ParseInt(key3, 10, 64)
 
 	return (bool)(IsBetweenTime(t1, t2, t)), nil
+}
+
+func DurFunc(args ...interface{}) (interface{}, error) {
+	key1 := args[0].(string)
+	key2 := args[1].(string)
+
+	tr, _ := strconv.ParseInt(key1, 10, 64)
+	tp, _ := strconv.ParseInt(key2, 10, 64)
+
+	return tr <= tp, nil
+}
+
+func DisFunc(args ...interface{}) (interface{}, error) {
+	key1 := args[0].(string)
+	key2 := args[1].(string)
+
+	dr, _ := strconv.ParseFloat(key1, 64)
+	dp, _ := strconv.ParseFloat(key2, 64)
+
+	return dr <= dp, nil
 }

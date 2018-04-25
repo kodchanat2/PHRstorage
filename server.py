@@ -39,6 +39,7 @@ def nutrientdata():
 		userid = obj.get("userid")
 		watcherid = obj.get("watcherid")
 		time_req = obj.get("time")
+		location_req = obj.get("location")
 		appid = obj.get("appid")
 		nutrients = obj.get("nutrients")
 		date = obj.get("date")
@@ -49,7 +50,7 @@ def nutrientdata():
 		data = {}
 		data['nutrient'] = nutrients
 
-		if not client.request_enforcement(watcherid, "patient", userid, "write_nutrient", time_req) :
+		if not client.request_enforcement(watcherid, "write_nutrient", userid, "patient", "*", "*", "*", time_req, location_req, appid) :
 			return jsonify(success="false", deny="true")
 		manager.save_batch(table_nutrient, rowkey, data)
 
@@ -61,6 +62,7 @@ def nutrientdata():
 		userid = request.args.get("userid")
 		watcherid = request.args.get("watcherid")
 		time_req = request.args.get("time")
+		location_req = request.args.get("location")
 		appid =  request.args.get("appid")
 		date = request.args.get("date")
 		meal = request.args.get("meal")
@@ -70,7 +72,7 @@ def nutrientdata():
 		data = manager.fetch(table_nutrient, rowkey)
 
 		# print data
-		if client.request_enforcement(watcherid, "patient", userid, "read_nutrient", time_req) :
+		if client.request_enforcement(watcherid, "read_nutrient", userid, "patient", "*", "*", "*", time_req, location_req, appid) :
 			return jsonify(data=data)
 		else :
 			return jsonify(data={}, deny="true")
@@ -93,6 +95,7 @@ def nutrientImage():
 		userid = request.args.get("userid")
 		watcherid = request.args.get("watcherid")
 		time_req = request.args.get("time")
+		location_req = request.args.get("location")
 		appid =  request.args.get("appid")
 		string_date = request.args.get("date")
 		title = request.args.get("title")
@@ -148,7 +151,7 @@ def nutrientImage():
 		encoded_string = base64.b64encode(image_file.read())
 
 	
-	if client.request_enforcement(watcherid, "patient", userid, "read_nutrient_chart", time_req) :
+	if client.request_enforcement(watcherid, "read_nutrient_chart", userid, "patient", "*", "*", "*", time_req, location_req, appid) :
 		return jsonify(image=encoded_string)
 	else :
 		return jsonify(deny="true")
@@ -163,6 +166,7 @@ def nutrientProgress():
 	userid = request.args.get("userid")
 	watcherid = request.args.get("watcherid")
 	time_req = request.args.get("time")
+	location_req = request.args.get("location")
 	appid = request.args.get("appid")
 	# end = dt.datetime.now()
 	string_date = request.args.get("date")
@@ -185,7 +189,7 @@ def nutrientProgress():
 		limit = service.get_nutrients_minmax(mock.get_nutrient_limit())
 		# print limit
 		
-		if client.request_enforcement(watcherid, "patient", userid, "read_nutrient", time_req) :
+		if client.request_enforcement(watcherid, "read_nutrient", userid, "patient", "*", "*", "*", time_req, location_req, appid) :
 			return jsonify(data=data, limit=limit)
 		else :
 			return jsonify(data={}, deny="true")
@@ -197,6 +201,7 @@ def chartnutrient():
 		userid = request.args.get("userid")
 		watcherid = request.args.get("watcherid")
 		time_req = request.args.get("time")
+		location_req = request.args.get("location")
 		appid =  request.args.get("appid")
 		string_date = request.args.get("date")
 		title = request.args.get("title")
@@ -228,7 +233,7 @@ def chartnutrient():
 		dic = service.summary_by_date(result, columnFamily, title)
 		data_chart = service.generate_info_nutrient_linechart(dic, minValue, maxValue, begin, amount)
 
-		if client.request_enforcement(watcherid, "patient", userid, "read_nutrient_chart", time_req) :
+		if client.request_enforcement(watcherid, "read_nutrient_chart", userid, "patient", "*", "*", "*", time_req, location_req, appid) :
 			return jsonify(chart=data_chart)
 		else :
 			return jsonify(data={}, deny="true")
@@ -241,6 +246,7 @@ def chartpoint():
 		userid = request.args.get("userid")
 		watcherid =  request.args.get("watcherid")
 		time_req =  request.args.get("time")
+		location_req =  request.args.get("location")
 		appid =  request.args.get("appid")
 		year = request.args.get("year")
 		month = request.args.get("month")
@@ -278,7 +284,7 @@ def chartpoint():
 		# return jsonify(points=points,dates=dates,lastcheck=lastcheck,limit=limit,unit=unit)
 		# return jsonify(success="true")
 		
-		if client.request_enforcement(watcherid, "patient", userid, "read_result_chart", time_req) :
+		if client.request_enforcement(watcherid, "read_result_chart", userid, "patient", "*", "*", "*", time_req, location_req, appid) :
 			return jsonify(chart=info_linechart, data=result)
 		else :
 			return jsonify(data={}, deny="true")
@@ -291,6 +297,7 @@ def resultdata():
 		userid = obj.get("userid")
 		watcherid = obj.get("watcherid")
 		time_req = obj.get("time")
+		location_req = obj.get("location")
 		appid = obj.get("appid")
 		date = obj.get("date")
 		labresult = obj.get("result")
@@ -305,7 +312,7 @@ def resultdata():
 
 		# print json.dumps(obj, indent=4, separators=(',', ': '))
 		
-		if not client.request_enforcement(watcherid, "patient", userid, "write_result", time_req) :
+		if not client.request_enforcement(watcherid, "write_result", userid, "patient", "*", "*", "*", time_req, location_req, appid) :
 			return jsonify(success="false", deny="true")
 		manager.insert_data(table_result, rowkey, 'testresults', title, _value)
 		
@@ -331,6 +338,7 @@ def water():
 	userid = request.args.get("userid")
 	watcherid = request.args.get("watcherid")
 	time_req = request.args.get("time")
+	location_req = request.args.get("location")
 	appid =  request.args.get("appid")	
 	string_date = request.args.get("date")
 
@@ -352,7 +360,7 @@ def water():
 
 	chart = service.generate_info_exercise_barchart(data)
 
-	if client.request_enforcement(watcherid, "patient", userid, "read_water", time_req) :
+	if client.request_enforcement(watcherid, "read_water", userid, "patient", "*", "*", "*", time_req, location_req, appid) :
 		return jsonify(data=data, chart=chart)
 	else :
 		return jsonify(data={}, deny="true")
@@ -367,13 +375,14 @@ def appointment():
 		userid = obj.get("userid")
 		watcherid = obj.get("watcherid")
 		time_req = obj.get("time")
+		location_req = obj.get("location")
 		appid = obj.get("appid")
 		date = obj.get("date")
 
 		description = json.dumps(obj.get("description"),ensure_ascii=False)
 		
 		rowkey = userid + "_" + appid + "_" + date
-		if not client.request_enforcement(watcherid, "patient", userid, "write_appointment", time_req) :
+		if not client.request_enforcement(watcherid, "write_appointment", userid, "patient", "*", "*", "*", time_req, location_req, appid) :
 			return jsonify(success="false", deny="true")
 		manager.insert_data(table_information, rowkey, 'treatment', 'appointment', description)
 
@@ -384,6 +393,7 @@ def appointment():
 		userid = request.args.get("userid")
 		watcherid = request.args.get("watcherid")
 		time_req = request.args.get("time")
+		location_req = request.args.get("location")
 		appid =  request.args.get("appid")
 		month = request.args.get("month")
 		year = request.args.get("year")
@@ -402,10 +412,17 @@ def appointment():
 		data_json = service.generate_key_value_appointment(data)
 		
 		
-		if client.request_enforcement(watcherid, "patient", userid, "read_appointment", time_req) :
+		if client.request_enforcement(watcherid, "read_appointment", userid, "patient", "*", "*", "*", time_req, location_req, appid) :
 			return jsonify(data=data_json)
 		else :
 			return jsonify(data={}, deny="true")
+
+# @app.route('/profile/list', methods=['GET'])
+# def profile_list():
+# 	if request.method == 'GET':
+# 		pro_list = service.get_all_medicine_title(mock.get_all_medicine())	
+
+# 		return jsonify(list=med_list)
 
 @app.route('/profile/info', methods=['GET', 'POST'])
 def profile():
@@ -415,6 +432,7 @@ def profile():
 		userid = obj.get("userid")
 		watcherid = obj.get("watcherid")
 		time_req = obj.get("time")
+		location_req = obj.get("location")
 		appid = obj.get("appid")
 		profile = obj.get("profile")
 
@@ -425,7 +443,7 @@ def profile():
 		
 		rowkey = userid + "_" + appid
 		
-		if not client.request_enforcement(watcherid, "patient", userid, "write_profile", time_req) :
+		if not client.request_enforcement(watcherid, "write_profile", userid, "patient", "*", "*", "*", time_req, location_req, appid) :
 			return jsonify(success="false", deny="true")
 		manager.save_batch(table_information, rowkey, data)
 
@@ -436,13 +454,14 @@ def profile():
 		appid =  request.args.get("appid")
 		watcherid = request.args.get("watcherid")
 		time_req = request.args.get("time")
+		location_req = request.args.get("location")
 		
 		rowkey = userid + "_" + appid
 		column = 'profile'
 		
 		data = manager.fetch(table_information, rowkey, column)
 
-		if client.request_enforcement(watcherid, "patient", userid, "read_profile", time_req) :
+		if client.request_enforcement(watcherid, "read_profile", userid, "patient", "*", "*", "*", time_req, location_req, appid) :
 			return jsonify(data=data)
 		else :
 			return jsonify(data={}, deny="true")
@@ -462,6 +481,7 @@ def exercise():
 		userid = obj.get("userid")
 		watcherid = obj.get("watcherid")
 		time_req = obj.get("time")
+		location_req = obj.get("location")
 		appid = obj.get("appid")
 		date = obj.get("date")
 
@@ -483,7 +503,7 @@ def exercise():
 		_value = str(value) + ',' + str(goal)
 
 		
-		if not client.request_enforcement(watcherid, "patient", userid, "write_exercise", time_req) :
+		if not client.request_enforcement(watcherid, "write_exercise", userid, "patient", "*", "*", "*", time_req, location_req, appid) :
 			return jsonify(success="false", deny="true")
 		manager.insert_data(table_exercise, rowkey, columnFamily, title, _value)
 
@@ -496,6 +516,7 @@ def exercise():
 		userid = request.args.get("userid")
 		watcherid = request.args.get("watcherid")
 		time_req = request.args.get("time")
+		location_req = request.args.get("location")
 		appid =  request.args.get("appid")
 		title =  request.args.get("title")
 		string_date = request.args.get("date")
@@ -527,7 +548,7 @@ def exercise():
 
 		chart = service.generate_info_exercise_barchart(data)
 
-		if client.request_enforcement(watcherid, "patient", userid, "read_exercise", time_req) :
+		if client.request_enforcement(watcherid, "read_exercise", userid, "patient", "*", "*", "*", time_req, location_req, appid) :
 			return jsonify(chart=chart, data=data)
 		else :
 			return jsonify(data={}, deny="true")
@@ -550,6 +571,7 @@ def medicine():
 		userid = obj.get("userid")
 		watcherid = obj.get("watcherid")
 		time_req = obj.get("time")
+		location_req = obj.get("location")
 		appid = obj.get("appid")
 		medicine = obj.get("medicine")
 		med_id = obj.get("medId")
@@ -565,7 +587,7 @@ def medicine():
 		data['medicine']['side_effect'] = side_effect
 
 
-		if not client.request_enforcement(watcherid, "patient", userid, "write_medicine", time_req) :
+		if not client.request_enforcement(watcherid, "write_medicine", userid, "patient", "*", "*", "*", time_req, location_req, appid) :
 			return jsonify(success="false", deny="true")
 		manager.save_batch(table_medicines, rowkey, data)
 
@@ -576,6 +598,7 @@ def medicine():
 		userid = request.args.get("userid")
 		watcherid = request.args.get("watcherid")
 		time_req = request.args.get("time")
+		location_req = request.args.get("location")
 		appid =  request.args.get("appid")
 
 		start_row = base64.b64encode("{}_{}".format(userid, appid))
@@ -592,7 +615,7 @@ def medicine():
 		
 		schedule = service.get_medicine_schedule(desc_list)
 
-		if client.request_enforcement(watcherid, "patient", userid, "read_medicine", time_req) :
+		if client.request_enforcement(watcherid, "read_medicine", userid, "patient", "*", "*", "*", time_req, location_req, appid) :
 			return jsonify(data=list(schedule.items()), desc=desc_value)
 		else :
 			return jsonify(data={}, deny="true")
@@ -601,12 +624,13 @@ def medicine():
 		userid = request.args.get("userid")
 		watcherid = request.args.get("watcherid")
 		time_req = request.args.get("time")
+		location_req = request.args.get("location")
 		appid =  request.args.get("appid")
 		med_id = request.args.get('medId')
 
 		rowkey = userid + "_" + appid + "_" + med_id
 
-		if not client.request_enforcement(watcherid, "patient", userid, "delete_medicine", time_req) :
+		if not client.request_enforcement(watcherid, "delete_medicine", userid, "patient", "*", "*", "*", time_req, location_req, appid) :
 			return jsonify(success="false", deny="true")
 		manager.delete_row(table_medicines, rowkey)
 		

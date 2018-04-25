@@ -26,20 +26,18 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
+// user, act, owner, role, platform, work_period, status, duration, distance, app
 type SecurityContext struct {
-	UserID string
-	Role   string
-	// Platform	string
-	// Expertise	string
-	// Work_period	string
-	// Status_sub	string
-	OwnerID string
-	// AppID	string
-	// SensorID	string
-	// Status_res	string
-	Time string
-	// Location string
-	Action string
+	UserID      string
+	Action      string
+	OwnerID     string
+	Role        string
+	Platform    string
+	Work_period string
+	Status      string
+	Duration    string
+	Distance    string
+	AppID       string
 }
 
 var logger *log.Logger

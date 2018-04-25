@@ -15,16 +15,21 @@
 import json
 import urllib2
 
-def request_enforcement(uid, role, oid, action, time_req):
+def request_enforcement(uid, action, oid, role, plat, wp, st, dur, dis, app):
     url = 'http://localhost:9111/decision'
     # userID, Role, Platform, Expertise, work_period, status, ownerID, appID, sensorID, status, Date, Location
     
     values = {
         "UserID": unicode(uid).encode(), 
-        "Role": role, 
-        "OwnerID": unicode(oid).encode(), 
         "Action": action,
-        "Time": unicode(time_req).encode()
+        "OwnerID": unicode(oid).encode(), 
+        "Role": role, 
+        "Platform": plat,
+        "Work_period": unicode(wp).encode(),
+        "Status": st,
+        "Duration": unicode(dur).encode(),
+        "Distance": unicode(dis).encode(),
+        "AppID": unicode(app).encode()
     }
     params = str(values)
     params = params.replace("'", '"')

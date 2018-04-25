@@ -50,9 +50,6 @@ def nutrientdata():
 
 		data = {}
 		data['nutrient'] = nutrients
-		data['lat'] = location_lat
-		data['lon'] = location_lon
-		data['time'] = time_req
 
 		if not client.request_enforcement(watcherid, "write_nutrient", userid, "patient", "*", "*", "*", time_req, "*", appid) :
 			return jsonify(success="false", deny="true")
@@ -324,7 +321,7 @@ def resultdata():
 		
 		if not client.request_enforcement(watcherid, "write_result", userid, "patient", "*", "*", "*", time_req, "*", appid) :
 			return jsonify(success="false", deny="true")
-		manager.insert_data(table_result, rowkey, 'testresults', title, _value, location_lon, location_lat, time_req)
+		manager.insert_data(table_result, rowkey, 'testresults', title, _value)
 		
 		return jsonify(success="true")
 	elif request.method == 'GET':
@@ -396,7 +393,7 @@ def appointment():
 		rowkey = userid + "_" + appid + "_" + date
 		if not client.request_enforcement(watcherid, "write_appointment", userid, "patient", "*", "*", "*", time_req, "*", appid) :
 			return jsonify(success="false", deny="true")
-		manager.insert_data(table_information, rowkey, 'treatment', 'appointment', description, location_lon, location_lat, time_req)
+		manager.insert_data(table_information, rowkey, 'treatment', 'appointment', description)
 
 		# print json.dumps(obj, indent=4, separators=(',', ': '))
 		return jsonify(success="true")
@@ -452,9 +449,6 @@ def profile():
 
 		data = {}
 		data['profile'] = profile
-		data['lon'] = location_lon
-		data['lat'] = location_lat
-		data['time'] = time_req
 
 		# print data
 		
@@ -524,7 +518,7 @@ def exercise():
 		
 		if not client.request_enforcement(watcherid, "write_exercise", userid, "patient", "*", "*", "*", time_req, "*", appid) :
 			return jsonify(success="false", deny="true")
-		manager.insert_data(table_exercise, rowkey, columnFamily, title, _value, location_lon, location_lat, time_req)
+		manager.insert_data(table_exercise, rowkey, columnFamily, title, _value)
 
 		# print json.dumps(obj, indent=4, separators=(',', ': '))
 
@@ -604,9 +598,6 @@ def medicine():
 
 		data = {}
 		data['medicine'] = medicine
-		data['lon'] = location_lon
-		data['lat'] = location_lat
-		data['time'] = time_req
 		data['medicine']['title'] = title
 		data['medicine']['side_effect'] = side_effect
 

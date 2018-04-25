@@ -63,7 +63,7 @@ def fetch_part(table, start_row, end_row, *args):
 	else:
 		return table.fetch_all_rows(with_row_id=True, fail_silently=True, scanner_config='<Scanner maxVersions="1" startRow="{}" endRow="{}"><column>{}</column></Scanner>'.format(start_row, end_row, args[0]))
 
-def insert_data(table, rowkey, columfamily, columqualifier, value, lon, lat, time):
+def insert_data(table, rowkey, columfamily, columqualifier, value):
 	c = starbase.Connection(port=HBASE_PORT)
 	#XXprint client.request_enforcement(rowkey[:rowkey.find('_')], 'insert_data', 'POST', rowkey)
 	# c = starbase.Connection(host=HBASE_HOST, port=HBASE_PORT)
@@ -73,10 +73,7 @@ def insert_data(table, rowkey, columfamily, columqualifier, value, lon, lat, tim
 		rowkey,
 		{
 			columfamily: {
-				columqualifier: value,
-				"lon":lon,
-				"lat":lat,
-				"time": time
+				columqualifier: value
 			}
 		}
 		)

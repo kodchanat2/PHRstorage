@@ -78,10 +78,6 @@ func enforce(sc SecurityContext) bool {
 	if !enforceForFile(sc) {
 		return false
 	}
-
-	if sc.Time == "None" {
-		return true //ignore none parameter
-	}
 	return enforceForTimeFile(sc)
 }
 

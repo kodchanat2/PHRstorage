@@ -88,7 +88,7 @@ func handleAdd(c *gin.Context) {
 	res := addP(sc)
 	fmt.Print("Policy")
 	if res == true {
-		color.Hiblue("Added")
+		color.HiBlue("Added")
 	}
 	logger.Print("policy: ", sc, " ---> ", res)
 

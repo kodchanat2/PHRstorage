@@ -29,7 +29,7 @@ table_medicines = 'medicines'
 @cross_origin
 
 @app.route('/add', methods=['POST'])
-def nutrientdata():
+def adddata():
 	if request.method == 'POST':
 		obj = request.json
 		print json.dumps(obj, indent=4, separators=(',', ': '))

@@ -57,7 +57,7 @@ func init() {
 // 	e.AddFunction("betweenTime", TimeFunc)
 // 	return e.Enforce(sc.UserID, sc.Role, sc.OwnerID, sc.Action, sc.Duration)
 // }
-e := casbin.NewEnforcer(model_DB, policy_DB, false)
+var e = casbin.NewEnforcer(model_DB, policy_DB, false)
 e.AddFunction("inDuration", DurFunc)
 e.AddFunction("inDistance", DisFunc)
 

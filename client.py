@@ -44,6 +44,35 @@ def request_enforcement(uid, action, oid, role, plat, wp, st, dur, dis, app):
     else:
         return False
 
+def req_add(uid, action, oid, role, plat, wp, st, dur, dis, app):
+    url = 'http://localhost:9111/add'
+    # userID, Role, Platform, Expertise, work_period, status, ownerID, appID, sensorID, status, Date, Location
+    
+    values = {
+        "UserID": unicode(uid).encode(), 
+        "Action": action,
+        "OwnerID": unicode(oid).encode(), 
+        "Role": role, 
+        "Platform": plat,
+        "Work_period": unicode(wp).encode(),
+        "Status": st,
+        "Duration": unicode(dur).encode(),
+        "Distance": unicode(dis).encode(),
+        "AppID": unicode(app).encode()
+    }
+    params = str(values)
+    params = params.replace("'", '"')
+
+    headers = {"Content-type": "application/json", "Accept": "application/json"}
+
+    req = urllib2.Request(url, params, headers)
+    response = urllib2.urlopen(req)
+    res = json.loads(response.read())
+    if res['success'] == 'true':
+        return True
+    else:
+        return False
+
 
 def old_request_enforcement(sub, obj, act, service):
     url = 'http://localhost:9111/decision'

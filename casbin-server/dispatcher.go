@@ -48,21 +48,21 @@ func init() {
 	policy_DB = "policy/db-policy.csv"
 }
 
-func enforceForFile(sc SecurityContext) bool {
-	e := casbin.NewEnforcer(model_custom, policy_custom, false)
-	return e.Enforce(sc.UserID, sc.Role, sc.OwnerID, sc.Action)
-}
-func enforceForTimeFile(sc SecurityContext) bool {
-	e := casbin.NewEnforcer(model_time, policy_time, false)
-	e.AddFunction("betweenTime", TimeFunc)
-	return e.Enforce(sc.UserID, sc.Role, sc.OwnerID, sc.Action, sc.Duration)
-}
+// func enforceForFile(sc SecurityContext) bool {
+// 	e := casbin.NewEnforcer(model_custom, policy_custom, false)
+// 	return e.Enforce(sc.UserID, sc.Role, sc.OwnerID, sc.Action)
+// }
+// func enforceForTimeFile(sc SecurityContext) bool {
+// 	e := casbin.NewEnforcer(model_time, policy_time, false)
+// 	e.AddFunction("betweenTime", TimeFunc)
+// 	return e.Enforce(sc.UserID, sc.Role, sc.OwnerID, sc.Action, sc.Duration)
+// }
+var e := casbin.NewEnforcer(model_DB, policy_DB, false)
+e.AddFunction("inDuration", DurFunc)
+e.AddFunction("inDistance", DisFunc)
 
 func enforceForDB(sc SecurityContext) bool {
-	e := casbin.NewEnforcer(model_DB, policy_DB, false)
-	e.AddFunction("inDuration", DurFunc)
-	e.AddFunction("inDistance", DisFunc)
-	return e.Enforce(sc.UserID, sc.Action, sc.OwnerID, sc.Role, sc.Platform, sc.Work_period, sc.Status, sc.Duration, sc.Distance, sc.AppID)
+		return e.Enforce(sc.UserID, sc.Action, sc.OwnerID, sc.Role, sc.Platform, sc.Work_period, sc.Status, sc.Duration, sc.Distance, sc.AppID)
 }
 
 func enforce(sc SecurityContext) bool {
@@ -79,6 +79,11 @@ func enforce(sc SecurityContext) bool {
 		return false
 	}
 	return enforceForTimeFile(sc)
+}
+
+func addP(sc SecurityContext) bool {
+	return e.AddPolicy(sc.UserID, sc.Action, sc.OwnerID, sc.Role, sc.Platform, sc.Work_period, sc.Status, sc.Duration, sc.Distance, sc.AppID)
+
 }
 
 // ------------- Custom Function -----------------

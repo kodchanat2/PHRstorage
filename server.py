@@ -28,6 +28,24 @@ table_medicines = 'medicines'
 @app.route('/')
 @cross_origin
 
+@app.route('/add', methods=['POST'])
+def nutrientdata():
+	if request.method == 'POST':
+		obj = request.json
+		print json.dumps(obj, indent=4, separators=(',', ': '))
+		userid = obj.get("userid")
+		watcherid = obj.get("watcherid")
+		action = obj.get("action")
+		time_req = obj.get("time")
+		location_lat = obj.get("lat")
+		location_lon = obj.get("lon")
+		appid = obj.get("appid")
+
+		if not client.req_add(watcherid, action, userid, "patient", "*", "*", "*", time_req, "*", appid) :
+			return jsonify(success="false", deny="true")
+		return jsonify(success="true")
+		
+
 #######
 ####### Nutrient 
 #######

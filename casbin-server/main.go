@@ -71,6 +71,33 @@ func handleRequest(c *gin.Context) {
 	})
 }
 
+func handleAdd(c *gin.Context) {
+	r := c.Request
+
+	body, err := ioutil.ReadAll(r.Body)
+	if err != nil {
+		panic(err)
+	}
+
+	var sc SecurityContext
+	err = json.Unmarshal(body, &sc)
+	if err != nil {
+		panic(err)
+	}
+
+	res := addP(sc)
+	fmt.Print("Policy")
+	if res == true {
+		color.Hiblue("Added")
+	}
+	logger.Print("policy: ", sc, " ---> ", res)
+
+	res_str := strconv.FormatBool(res)
+	c.JSON(200, gin.H{
+		"success": res_str,
+	})
+}
+
 func main() {
 	logfile, err := os.OpenFile("decision.log", os.O_RDWR|os.O_CREATE|os.O_APPEND, 0666)
 	if err != nil {
@@ -84,6 +111,7 @@ func main() {
 
 	r := gin.New()
 	r.POST("/decision", handleRequest)
+	r.POST("/add", handleAdd)
 	r.Run(":9111") // listen and serve on 0.0.0.0:8080
 
 }

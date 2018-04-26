@@ -28,9 +28,9 @@ table_medicines = 'medicines'
 @app.route('/')
 @cross_origin
 
-@app.route('/add', methods=['POST'])
+@app.route('/add', methods=['GET'])
 def adddata():
-	if request.method == 'POST':
+	if request.method == 'GET':
 		obj = request.json
 		print json.dumps(obj, indent=4, separators=(',', ': '))
 		userid = obj.get("userid")

@@ -71,14 +71,14 @@ func enforce(sc SecurityContext) bool {
 	}
 	return enforceForDB(sc)
 
-	if sc.Action == "read_profile" {
-		return true
-	}
+	// if sc.Action == "read_profile" {
+	// 	return true
+	// }
 
-	if !enforceForFile(sc) {
-		return false
-	}
-	return enforceForTimeFile(sc)
+	// if !enforceForFile(sc) {
+	// 	return false
+	// }
+	// return enforceForTimeFile(sc)
 }
 
 func addP(sc SecurityContext) bool {

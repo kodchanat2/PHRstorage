@@ -31,8 +31,7 @@ table_medicines = 'medicines'
 @app.route('/add', methods=['GET'])
 def adddata():
 	if request.method == 'GET':
-		obj = request.json
-		print json.dumps(obj, indent=4, separators=(',', ': '))
+		obj = request.args
 		userid = obj.get("userid")
 		watcherid = obj.get("watcherid")
 		action = obj.get("action")

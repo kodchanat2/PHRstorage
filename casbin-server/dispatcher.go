@@ -112,7 +112,7 @@ func DurFunc(args ...interface{}) (interface{}, error) {
 	tr, _ := strconv.ParseInt(key1, 10, 64)
 	tp, _ := strconv.ParseInt(key2, 10, 64)
 
-	return tr >= tp, nil
+	return tr <= tp, nil
 }
 
 func DisFunc(args ...interface{}) (interface{}, error) {

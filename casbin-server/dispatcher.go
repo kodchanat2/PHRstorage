@@ -84,6 +84,7 @@ func enforce(sc SecurityContext) bool {
 func addP(sc SecurityContext) bool {
 	e := casbin.NewEnforcer(model_DB, policy_DB, false)
 	e.AddPolicy(sc.UserID, sc.Action, sc.OwnerID, sc.Role, sc.Platform, sc.Work_period, sc.Status, sc.Duration, sc.Distance, sc.AppID)
+	e.SavePolicy()
 	return true
 }
 

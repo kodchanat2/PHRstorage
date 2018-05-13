@@ -28,9 +28,9 @@ table_medicines = 'medicines'
 @app.route('/')
 @cross_origin
 
-@app.route('/add', methods=['GET'])
+@app.route('/permission', methods=['GET','POST'])
 def adddata():
-	if request.method == 'GET':
+	if request.method == 'POST':
 		obj = request.args
 		userid = obj.get("userid")
 		watcherid = obj.get("watcherid")
@@ -43,7 +43,18 @@ def adddata():
 		if not client.req_add(watcherid, action, userid, "patient", "*", "*", "*", time_req, "*", appid) :
 			return jsonify(success="false", deny="true")
 		return jsonify(success="true")
-		
+
+    if request.method == 'GET':
+        # You should use os.path.join here too.
+        with open("casbin-server/policy/db-policy.csv") as f:
+            file_content = f.read()
+
+        return file_content     
+
+
+    else:
+        result = request.args.get['myfile']
+    return result		
 
 #######
 ####### Nutrient 

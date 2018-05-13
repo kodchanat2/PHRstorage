@@ -7,6 +7,7 @@ from dateutil.relativedelta import *
 import calendar
 import numpy as np
 import base64
+import os
 
 import manager 
 import service
@@ -44,12 +45,12 @@ def adddata():
 			return jsonify(success="false", deny="true")
 		return jsonify(success="true")
 
-	if request.method == 'GET':
-        # You should use os.path.join here too.
-        with open("casbin-server/policy/db-policy.csv") as f:
-            file_content = f.read()
+	# if request.method == 'GET':
+    #     # You should use os.path.join here too.
+    #     with open("casbin-server/policy/db-policy.csv") as f:
+    #         file_content = f.read()
 
-        return file_content     
+    #     return file_content     
 
 
 #######

@@ -50,7 +50,7 @@ def req_add(uid, action, oid, role, plat, wp, st, dur, dis, app):
     
     values = {
         "UserID": unicode(uid).encode(), 
-        "Action": action,
+        "Action": unicode(action).encode(),
         "OwnerID": unicode(oid).encode(), 
         "Role": role, 
         "Platform": plat,

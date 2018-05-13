@@ -44,17 +44,13 @@ def adddata():
 			return jsonify(success="false", deny="true")
 		return jsonify(success="true")
 
-    if request.method == 'GET':
+	if request.method == 'GET':
         # You should use os.path.join here too.
         with open("casbin-server/policy/db-policy.csv") as f:
             file_content = f.read()
 
         return file_content     
 
-
-    else:
-        result = request.args.get['myfile']
-    return result		
 
 #######
 ####### Nutrient 
